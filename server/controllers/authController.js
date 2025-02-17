@@ -1,11 +1,12 @@
 const bcrypt = require("bcrypt")
 const userModel = require("../models/userModel")
+const error = require("../middleware/error")
 
-const registerUser = async (req,res)=>{
+const registerUser = async (req,res,next)=>{
     const {username,email,password} = req.body
 
     if(!username || !email || !password || username === '' || email === '' || password === ''){
-        return res.status(400).json({success : false , message : "All fields are required"})
+        return next(error(400,"All fields are required"))
     }
 
     const hasPassword = bcrypt.hashSync(password,12)
@@ -22,7 +23,7 @@ const registerUser = async (req,res)=>{
         res.status(201).json({success : true , message : "User created successfully"})
 
     }catch(e){
-        res.status(500).json({success : false,message : e.message})
+        next(e)
     }
 }
 
