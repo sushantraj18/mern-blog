@@ -5,7 +5,7 @@ function Header() {
     const path = useLocation().pathname
 
   return (
-    <header className="p-4 dark:bg-gray-100 dark:text-gray-800">
+    <header className="p-4 bg-gray-800 text-gray-100">
 	<div className="container flex justify-between h-16 mx-auto">
 		<ul className="items-stretch hidden space-x-3 lg:flex">
 			<li className="flex">
