@@ -40,9 +40,9 @@ const registerUser = async (req,res,next)=>{
 
 const loginUser = async(req,res,next)=>{
 
-    const {email,password} = req.body
+    const {username,password} = req.body
 
-    if(!email || !password || email === '' || password === ''){
+    if(!username || !password || username === '' || password === ''){
         return next(error(400,"All fields are required"))
     }
 
@@ -50,7 +50,7 @@ const loginUser = async(req,res,next)=>{
 
     try{
 
-        const isUserAvailable = await userModel.findOne({email})
+        const isUserAvailable = await userModel.findOne({username})
 
         if(!isUserAvailable){
             return next(error(400,"invalid user or password"))
