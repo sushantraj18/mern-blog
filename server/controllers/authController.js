@@ -62,10 +62,12 @@ const loginUser = async(req,res,next)=>{
             return next(error(400,"invalid password or user"))
         }
 
+ 
 
         const accessToken = jwt.sign({user : isUserAvailable.username},process.env.JWT_TOKEN_KEY,{expiresIn:"1d"})
+        const {password : pass ,...rest}= isUserAvailable._doc
 
-        res.status(200).cookie('access-token',accessToken,{httpOnly:true}).json("login successfully")
+        res.status(200).cookie('access-token',accessToken,{httpOnly:true}).json({rest})
 
     }catch(e){
         console.log(e)

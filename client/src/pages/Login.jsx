@@ -1,12 +1,19 @@
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import { Link, useNavigate } from 'react-router-dom'
+import { logInStart,logInSuccess,logInFailure } from '../redux/userSlice'
+import {useDispatch, useSelector} from 'react-redux'
+
+
 
 
 function Login() {
   const [formData,setFormData] = useState({})
   const [loading,setLoading] = useState(false)
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const {currentUser,error} = useSelector(state=>state.user)
+  console.log(error)
 
   const changeHandler = (e)=>{
     setFormData((prev)=>({...prev,[e.target.id] : e.target.value}))
@@ -16,10 +23,13 @@ function Login() {
     e.preventDefault()
 
     if(!formData.username || !formData.password){
-        return toast.error("Please fill out all fields")
+        
+      toast.error("Please fill out all fields")
+      return dispatch(logInFailure("Please fill out all fields"))
     }
     try{
       setLoading(true)
+      dispatch(logInStart())
       const res =  await fetch('/api/auth/login',{
         method : 'POST',
         headers : {'Content-Type' : 'application/json'},
@@ -28,27 +38,25 @@ function Login() {
 
       const data = await res.json()
 
-      if(data.errMessage === "invalid user or password" ){
-        return toast.error("invalid credentials")
-      }
-      
-      if(data.errMessage === 'invalid password or user'){
-        return toast.error ('invalid credentials')
-      }
-
       if( data.success === false){
-        return toast.error("Unable to login ")
+        
+        dispatch(logInFailure(data.errMessage))
+        setLoading(false)
+        
+        return toast.error(data.errMessage)
       }
       
       
       setLoading(false)
       if(res.ok){
+        dispatch(logInSuccess(data))
          toast.success("login successful")
          navigate("/")
       }
       
     }catch(e){
       console.error(e)
+      dispatch(logInFailure(e.message))
     }
     
   }
