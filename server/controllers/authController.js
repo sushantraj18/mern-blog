@@ -75,5 +75,38 @@ const loginUser = async(req,res,next)=>{
     }
 }
 
+const google = async(req,res,next)=>{
+    const {name,email,googlePhotoUrl} = req.body
+    try{
+        const user = await userModel.findOne({$or : [{email } , {username : name}]});
+        if(user){
+            const accessToken = jwt.sign({user : user.username},process.env.JWT_TOKEN_KEY);
+            const {password,...rest} = user._doc;
+            res.status(200).cookie('access-token',accessToken,{httpOnly : true}).json(rest)
+        }else{
+            
+            const genratePassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
+            const hashPassword = bcrypt.hashSync(genratePassword,10)
 
-module.exports = {registerUser,loginUser}
+            const newUser = new userModel({
+                username : name.toLowerCase().split(" ").join("") + Math.random().toString(9).slice(-4),
+                email,
+                password : hashPassword,
+                profile : googlePhotoUrl
+            })
+
+            await newUser.save()
+
+            const accessToken = jwt.sign({user : newUser.username},process.env.JWT_TOKEN_KEY);
+            const {password,...rest} = newUser._doc
+            res.status(200).cookie('access-token',accessToken,{httpOnly:true}).json(rest)
+        }
+
+
+    }catch(e){
+
+    }
+}
+
+
+module.exports = {registerUser,loginUser,google}

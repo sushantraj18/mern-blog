@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import { Link, useNavigate } from 'react-router-dom'
+import Oauth from '../components/Oauth'
 
 function Signup() {
   const [formData,setFormData]= useState({})
@@ -70,8 +71,11 @@ function Signup() {
           </div>
           <div>
             <button disabled={loading} className="py-1 px-8 bg-blue-500 hover:bg-blue-800 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg cursor-pointer select-none">
-              {loading ? 'Loading...' :'Sign Up'}
+              {loading ? 'Loading...' :'Sign Up' }
             </button>
+          </div>
+          <div>
+              <Oauth/>
           </div>
           </form>
           <div className="text-sm text-gray-400 flex gap-2 mt-3">

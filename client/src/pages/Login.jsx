@@ -3,6 +3,7 @@ import toast from 'react-hot-toast'
 import { Link, useNavigate } from 'react-router-dom'
 import { logInStart,logInSuccess,logInFailure } from '../redux/userSlice'
 import {useDispatch, useSelector} from 'react-redux'
+import Oauth from '../components/Oauth'
 
 
 
@@ -93,6 +94,11 @@ function Login() {
               {loading ? 'Loading...' :'Sign In'}
             </button>
           </div>
+
+          <div>
+            <Oauth/>
+          </div>
+
           </form>
           <div className="text-sm text-gray-400 flex gap-2 mt-3">
             <span>Don't have an account?</span>
